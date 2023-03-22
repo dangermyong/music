@@ -124,12 +124,17 @@
             <!-- Password -->
             <div class="mb-3">
               <label class="inline-block mb-2">Password</label>
-              <VeeField
-                type="password"
-                name="password"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Password"
-              />
+              <VeeField name="password" :bails="false" v-slot="{ field, errors }">
+                <input
+                  class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+                  type="password"
+                  placeholder="Password"
+                  v-bind="field"
+                />
+                <div class="text-red-600" v-for="error in errors">
+                  {{ error }}
+                </div>
+              </VeeField>
               <ErrorMessage class="text-red-600" name="password" />
             </div>
             <!-- Confirm Password -->
@@ -197,11 +202,18 @@ export default {
         name: 'required|min:3|max:10|alphaSpaces',
         email: 'required|min:3|max:100|email',
         age: 'required|minValue:18|maxValue:150|numeric',
-        password: 'required|min:3|max:100',
-        confirm_password: 'confirmed:@password',
-        country: 'required|excluded:Antarctica',
-        tos: 'required'
-      }
+        password: 'required|min:9|max:100|excluded:password',
+        confirm_password: 'passwords_mismatch:@password',
+        country: 'required|country_excluded:Antarctica',
+        tos: 'tos'
+      },
+      userData: {
+        country: 'USA'
+      },
+      reg_in_submission: false,
+      reg_show_alert: false,
+      reg_alert_variant: 'bg-blue-500',
+      reg_alert_msg: 'Please wait! Your account is being created.'
     }
   },
   computed: {
